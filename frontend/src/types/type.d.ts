@@ -16,6 +16,7 @@ export interface Developer {
 export interface Nivel {
   id: number;
   nivel: string;
+  qtdDevs: number;
 }
 
 export interface Meta {

@@ -8,6 +8,10 @@ export const columnsLevels = [
     accessorKey: "nivel",
   },
   {
+    header: "Devs Associados",
+    accessorKey: "qtdDevs",
+  },
+  {
     header: "Excluir",
   },
   {

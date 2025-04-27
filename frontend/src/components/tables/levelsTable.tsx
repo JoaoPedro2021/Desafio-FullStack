@@ -79,6 +79,7 @@ export function LevelsTable({
                 <TableRow key={level.id} className="border-b border-[#014ea9]/10 hover:bg-[#014ea9]/5">
                   <TableCell className="text-white text-center">{level.id}</TableCell>
                   <TableCell className="text-white text-center">{level.nivel}</TableCell>
+                  <TableCell className="text-white text-center">{level.qtdDevs}</TableCell>
                   <TableCell className="flex justify-center">
                     <DialogExclusionLevel levelId={level.id}>
                       <Button variant="destructive">Excluir</Button>

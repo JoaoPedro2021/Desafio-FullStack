@@ -1,13 +1,13 @@
-import { Input } from "@/components/ui/input"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table"
 import { formatDate } from "@/lib/utils"
 import { ColumnTable, Developer } from "@/types/type"
-import { Search } from "lucide-react"
 import { useState } from "react"
 import { DialogExclusionDeveloper } from "../exclusionModals/dialogExclusionDeveloper"
 import { FormEditDeveloper } from "../forms/developer/developerEditForm"
 import { Pagination } from "../pagination"
+import { SearchBar } from "../searchBar"
 import { Button } from "../ui/button"
+import { CustomTableHeader } from "./tableHeader"
 
 interface DevelopersProps {
   devs: Developer[]
@@ -21,8 +21,37 @@ export function DevelopersTable({
   const [searchTerm, setSearchTerm] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10)
+  const [sortColumn, setSortColumn] = useState<string | null>(null)
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc")
 
-  const filteredDevelopers = devs.filter(
+  const handleSort = (column: string) => {
+    if (sortColumn === column) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc")
+    } else {
+      setSortColumn(column)
+      setSortDirection("asc")
+    }
+  }
+
+  const sortedDevs = [...devs].sort((a, b) => {
+    if (!sortColumn) return 0
+    const aValue = a[sortColumn as keyof Developer]
+    const bValue = b[sortColumn as keyof Developer]
+
+    if (typeof aValue === "string" && typeof bValue === "string") {
+      return sortDirection === "asc"
+        ? aValue.localeCompare(bValue)
+        : bValue.localeCompare(aValue)
+    }
+
+    if (typeof aValue === "number" && typeof bValue === "number") {
+      return sortDirection === "asc" ? aValue - bValue : bValue - aValue
+    }
+
+    return 0
+  })
+
+  const filteredDevelopers = sortedDevs.filter(
     (dev) =>
       dev.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
       dev.hobby.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -53,29 +82,15 @@ export function DevelopersTable({
 
   return (
     <div className="rounded-lg bg-[#1d1f27] shadow-lg">
-      <div className="mb-4 flex items-center rounded-t-lg bg-[#014ea9] p-4">
-        <Search className="mr-2 h-5 w-5 text-white" />
-        <Input
-          placeholder="Pesquisar desenvolvedor..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="border-0 bg-[#014ea9]/20 text-white placeholder:text-white/70 focus-visible:ring-white/30"
-        />
-      </div>
-
+      <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} placeholder={"Pesquisar desenvolvedor..."} />
       <div className="overflow-x-auto">
         <Table className="w-full">
-          <TableHeader className="bg-[#014ea9]/10">
-            <TableRow className="w-full">
-              {
-                columns.map((column) => (
-                  <TableHead key={column.header} className="text-white">
-                    {column.header}
-                  </TableHead>
-                ))
-              }
-            </TableRow>
-          </TableHeader>
+          <CustomTableHeader
+            columns={columns}
+            sortColumn={sortColumn}
+            sortDirection={sortDirection}
+            handleSort={handleSort}
+          />
           <TableBody>
             {paginatedDevelopers.length > 0 ? (
               paginatedDevelopers.map((developer) => (

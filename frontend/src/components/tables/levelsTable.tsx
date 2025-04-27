@@ -1,12 +1,12 @@
-import { Input } from "@/components/ui/input"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table"
 import { ColumnTable, Nivel } from "@/types/type"
-import { Search } from "lucide-react"
 import { useState } from "react"
 import { DialogExclusionLevel } from "../exclusionModals/dialogExclusionLevel"
 import { FormEditLevel } from "../forms/level/levelEditForm"
 import { Pagination } from "../pagination"
+import { SearchBar } from "../searchBar"
 import { Button } from "../ui/button"
+import { CustomTableHeader } from "./tableHeader"
 
 interface DevelopersProps {
   levels: Nivel[]
@@ -20,8 +20,37 @@ export function LevelsTable({
   const [searchTerm, setSearchTerm] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10)
+  const [sortColumn, setSortColumn] = useState<string | null>(null)
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc")
 
-  const filteredLevels = levels.filter(
+  const handleSort = (column: string) => {
+    if (sortColumn === column) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc")
+    } else {
+      setSortColumn(column)
+      setSortDirection("asc")
+    }
+  }
+
+  const sortedLevels = [...levels].sort((a, b) => {
+    if (!sortColumn) return 0
+    const aValue = a[sortColumn as keyof Nivel]
+    const bValue = b[sortColumn as keyof Nivel]
+
+    if (typeof aValue === "string" && typeof bValue === "string") {
+      return sortDirection === "asc"
+        ? aValue.localeCompare(bValue)
+        : bValue.localeCompare(aValue)
+    }
+
+    if (typeof aValue === "number" && typeof bValue === "number") {
+      return sortDirection === "asc" ? aValue - bValue : bValue - aValue
+    }
+
+    return 0
+  })
+
+  const filteredLevels = sortedLevels.filter(
     (level) =>
       level.nivel.toLowerCase().includes(searchTerm.toLowerCase())
   )
@@ -50,29 +79,15 @@ export function LevelsTable({
 
   return (
     <div className="rounded-lg bg-[#1d1f27] shadow-lg">
-      <div className="flex items-center rounded-t-lg bg-[#014ea9] p-4">
-        <Search className="mr-2 h-5 w-5 text-white" />
-        <Input
-          placeholder="Pesquisar nível..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="border-0 bg-[#014ea9]/20 text-white placeholder:text-white/70 focus-visible:ring-white/30"
-        />
-      </div>
-
+      <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} placeholder={"Pesquisar níveis..."} />
       <div className="overflow-x-auto">
         <Table className="w-full">
-          <TableHeader className="bg-[#014ea9]/10">
-            <TableRow className="w-full">
-              {
-                columns.map((column) => (
-                  <TableHead key={column.header} className="text-white text-center">
-                    {column.header}
-                  </TableHead>
-                ))
-              }
-            </TableRow>
-          </TableHeader>
+          <CustomTableHeader
+            columns={columns}
+            sortColumn={sortColumn}
+            sortDirection={sortDirection}
+            handleSort={handleSort}
+          />
           <TableBody>
             {paginatedLevels.length > 0 ? (
               paginatedLevels.map((level) => (

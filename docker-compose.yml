@@ -13,6 +13,8 @@ services:
     depends_on:
       - postgres
     restart: unless-stopped
+    command: >
+      sh -c "composer install && sleep 5 && php artisan migrate && php artisan serve --host=0.0.0.0 --port=8000"
 
   frontend:
     build: ./frontend

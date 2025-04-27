@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreLevelRequest;
-use App\Http\Resources\LevelRosource;
+use App\Http\Resources\LevelResource;
 use App\Services\LevelService;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -24,7 +24,7 @@ class LevelController extends Controller
         if ($levels->isEmpty()) {
             return response()->json(['message' => 'Nenhum Nível encontrado'], 404);
         }
-        return response()->json(LevelRosource::collection($levels), 200);
+        return response()->json(LevelResource::collection($levels), 200);
     }
 
     public function store(StoreLevelRequest $request): JsonResponse
@@ -36,7 +36,7 @@ class LevelController extends Controller
         }
 
         return response()->json([
-            'data' => new LevelRosource($level)
+            'data' => new LevelResource($level)
         ], 201);
     }
 
@@ -48,7 +48,7 @@ class LevelController extends Controller
             return response()->json(['message' => 'Nível não encontrado'], 404);
         }
 
-        return response()->json(new LevelRosource($level), 200);
+        return response()->json(new LevelResource($level), 200);
     }
 
     public function update(StoreLevelRequest $request, $id): JsonResponse
@@ -62,7 +62,7 @@ class LevelController extends Controller
         $updatedLevel = $this->levelsService->updateLevel($level, $request->validated());
 
         return response()->json([
-            'data' => new LevelRosource($updatedLevel)
+            'data' => new LevelResource($updatedLevel)
         ], 200);
     }
 
@@ -101,19 +101,19 @@ class LevelController extends Controller
             $perPage = request()->query('per_page', 10);
             $page = request()->query('page', 1);
 
-            $niveis = $this->levelsService->getPaginatedLevels($perPage, $page);
+            $levels = $this->levelsService->getPaginatedLevels($perPage, $page);
 
-            if ($niveis->isEmpty()) {
+            if ($levels->isEmpty()) {
                 return response()->json(['message' => 'Nenhum nível encontrado'], 404);
             }
 
             return response()->json([
-                'data' => LevelRosource::collection($niveis),
+                'data' => LevelResource::collection($levels),
                 'meta' => [
-                    'total' => $niveis->total(),
-                    'per_page' => $niveis->perPage(),
-                    'current_page' => $niveis->currentPage(),
-                    'last_page' => $niveis->lastPage(),
+                    'total' => $levels->total(),
+                    'per_page' => $levels->perPage(),
+                    'current_page' => $levels->currentPage(),
+                    'last_page' => $levels->lastPage(),
                 ]
             ], 200);
         } catch (Exception $e) {

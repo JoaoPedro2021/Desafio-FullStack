@@ -36,6 +36,10 @@ class LevelService
 
     public function deleteLevel(Level $level): bool
     {
+        if ($level->hasDeveloper()) {
+            return false;
+        }
+
         $level->delete();
         return true;
     }

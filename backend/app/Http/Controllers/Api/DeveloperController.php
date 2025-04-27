@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Docs\DeveloperControllerDocs;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDeveloperRequest;
 use App\Http\Resources\DeveloperResource;
@@ -10,8 +11,17 @@ use App\Services\DeveloperService;
 use Exception;
 use Illuminate\Http\JsonResponse;
 
+/**
+ * @OA\Info(
+ *     title="API de Desenvolvedores",
+ *     version="0.1",
+ *     description="Esta é a documentação da API de Desenvolvedores."
+ * )
+ */
+
 class DeveloperController extends Controller
 {
+    use DeveloperControllerDocs;
     protected $developerService;
 
     public function __construct(DeveloperService $developerService)

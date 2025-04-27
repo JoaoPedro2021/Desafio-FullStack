@@ -15,7 +15,9 @@ class LevelService
 
     public function getPaginatedLevels(int $perPage = 10, int $page = 1): LengthAwarePaginator
     {
-        return Level::orderBy('id', 'desc')->paginate($perPage, ['*'], 'page', $page);
+        return Level::withCount('developers')
+        ->orderBy('id', 'desc')
+        ->paginate($perPage, ['*'], 'page', $page);
     }
 
     public function getLevelById(int $id): ?Level

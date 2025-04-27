@@ -109,8 +109,16 @@ class LevelController extends Controller
                 return response()->json(['message' => 'Nenhum nível encontrado'], 404);
             }
 
+            $data = $levels->map(function ($level) {
+                return [
+                    'id' => $level->id,
+                    'nivel' => $level->nivel,
+                    'qtdDevs' => $level->developers_count,
+                ];
+            });
+
             return response()->json([
-                'data' => LevelResource::collection($levels),
+                'data' => $data,
                 'meta' => [
                     'total' => $levels->total(),
                     'per_page' => $levels->perPage(),

@@ -32,9 +32,9 @@ services:
     container_name: postgres
     restart: always
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: gazin_postgres
+      POSTGRES_USER: gazin_postgres_owner
+      POSTGRES_PASSWORD: npg_2fXqcEO4vGVg
     ports:
       - "5432:5432"
     volumes:

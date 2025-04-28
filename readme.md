@@ -31,12 +31,12 @@ No diretório do projeto, execute o comando:
 Links Importantes
 Backend local:http://localhost:8000/
 
-Frontend local: http://localhost:5173/home
+Frontend local: http://localhost:5173
 
 Documentação da API: http://localhost:8000/api/documentation#/
 
 Deploy de Produção
-Frontend em produção: https://desafio-full-stack-iota.vercel.app/home
+Frontend em produção: https://desafio-full-stack-iota.vercel.app
 
      ⚠️ Aviso:
        O deploy do frontend foi feito na Render (plano gratuito), portanto, as primeiras requisições podem demorar de 30 segundos a 1 minuto para serem processadas.

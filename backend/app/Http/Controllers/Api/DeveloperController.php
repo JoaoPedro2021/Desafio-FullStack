@@ -6,7 +6,6 @@ use App\Docs\DeveloperControllerDocs;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDeveloperRequest;
 use App\Http\Resources\DeveloperResource;
-use App\Http\Resources\LevelResource;
 use App\Services\DeveloperService;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -96,7 +95,7 @@ class DeveloperController extends Controller
 
             $developers = $this->developerService->getPaginatedDevelopers($perPage, $page);
 
-            if ($developers->isEmpty()) return response()->json(['message' => 'Nenhum desenvolvedor encontrado'], 404);
+            // if ($developers->isEmpty()) return response()->json(['message' => 'Nenhum desenvolvedor encontrado'], 404);
 
             return response()->json([
                 'data' => DeveloperResource::collection($developers),

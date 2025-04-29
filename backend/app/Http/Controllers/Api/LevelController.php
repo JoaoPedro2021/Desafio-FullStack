@@ -105,9 +105,9 @@ class LevelController extends Controller
 
             $levels = $this->levelsService->getPaginatedLevels($perPage, $page);
 
-            if ($levels->isEmpty()) {
-                return response()->json(['message' => 'Nenhum nível encontrado'], 404);
-            }
+            // if ($levels->isEmpty()) {
+            //     return response()->json(['message' => 'Nenhum nível encontrado'], 404);
+            // }
 
             $data = $levels->map(function ($level) {
                 return [
